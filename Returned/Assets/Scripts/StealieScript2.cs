@@ -13,17 +13,21 @@ public class StealieScript2 : MonoBehaviour
     void Start()
     {
         _isFollow = true;
+        Player= GameObject.FindGameObjectWithTag("Player").transform;
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
+
+        //checks if Stealie can follow player
         if(_isFollow)
         {
             transform.position = Vector3.MoveTowards(transform.position, Player.position, Speed * Time.deltaTime);
         }
     }
 
+    //checks if collides with item
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if(collision.gameObject.tag=="Item")
@@ -32,6 +36,7 @@ public class StealieScript2 : MonoBehaviour
         }
     }
 
+    //Stops following player
     IEnumerator Stunned()
     {
         _isFollow = false;
