@@ -4,8 +4,11 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public float speed; //Player speed
-    public float jumpMagnitute; //How hard they jump
+    public float speed; // Player speed
+    private float moddedSpeed; // a changable speed variable
+    public int speedDivisor;
+
+    public float jumpMagnitute; // How hard they jump
     private float moveInput; // Player input axis!
 
     private Rigidbody2D rb; // The players rigidbody
@@ -25,6 +28,7 @@ public class PlayerMovement : MonoBehaviour
 
     public int yeetStrength;
 
+    public GameObject test;
 
 
     // Start is called before the first frame update
@@ -39,7 +43,7 @@ public class PlayerMovement : MonoBehaviour
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, whatIsGround);
 
         moveInput = Input.GetAxisRaw("Horizontal"); //Take in horizontal input from player
-        rb.velocity = new Vector2(moveInput * speed, rb.velocity.y); //Move player
+        rb.velocity = new Vector2(moveInput * moddedSpeed, rb.velocity.y); //Move player
 
         //Flip the spite so you run the other way
         if(facingRight == false && moveInput > 0)
@@ -54,6 +58,17 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        //Half the speed when you're holding something.
+        if(holdingSomething)
+        {
+            moddedSpeed = speed / speedDivisor;
+        }
+        else
+        {
+            moddedSpeed = speed;
+        }
+
+
         //Jump!
         if(Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
@@ -73,22 +88,20 @@ public class PlayerMovement : MonoBehaviour
             holdingSomething = false;
             
             //Calculate position to put object you were holding at
-            Vector3 camCoords = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            camCoords.z = 0;
-            Vector3 reletiveVector = camCoords.normalized + transform.position;
-            
+            Vector2 camCoords = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector2 reletiveVector = camCoords - rb.position;
+
             //Prep to throw the object!
+            Vector2 finalVector = reletiveVector.normalized + rb.position; // Correct direction combined with the right start point (us!)
             heldObject.transform.SetParent(null);
-            heldObject.transform.position = reletiveVector;
+            heldObject.transform.position = finalVector;
+            test.transform.position = reletiveVector.normalized + rb.position;
             Rigidbody2D objRb = heldObject.GetComponent<Rigidbody2D>();
             objRb.simulated = true;
             heldObject.GetComponent<BoxCollider2D>().enabled = true;
             
             //Throw the object!
-            
-            
-            objRb.velocity = camCoords.normalized * yeetStrength;
-            Debug.Log(reletiveVector);
+            objRb.velocity = reletiveVector * yeetStrength;
             throwable = false;
         }
     }
