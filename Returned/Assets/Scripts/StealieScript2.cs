@@ -12,7 +12,7 @@ public class StealieScript2 : MonoBehaviour
     private PlayerMovement playerMovement;
     private StealieManager stealieManager;
     private float _randomMoveSpotPicker;
-
+    private Collider2D collider2D;
    
     // Start is called before the first frame update
     void Start()
@@ -21,6 +21,7 @@ public class StealieScript2 : MonoBehaviour
         Player= GameObject.FindGameObjectWithTag("Player").transform;
         playerMovement = FindObjectOfType<PlayerMovement>();
         stealieManager = FindObjectOfType<StealieManager>();
+        collider2D = GetComponent<Collider2D>();
     }
 
     // Update is called once per frame
@@ -62,11 +63,17 @@ public class StealieScript2 : MonoBehaviour
         {
             transform.position = Vector3.MoveTowards(transform.position, Player.position, Speed * Time.deltaTime);
         }
+        
     }
-
+    
+    
     //checks if collides with item and player
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
+        if(collision.gameObject.layer==8)
+        {
+            Physics2D.IgnoreCollision(collision.collider, collider2D);
+        }
         if (collision.gameObject.tag == "Player")
         {
             playerMovement.heldObject.transform.SetParent(holdSpot);
