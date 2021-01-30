@@ -18,6 +18,11 @@ public class PlayerMovement : MonoBehaviour
     public float checkRadius; // Radius of that check ^
     public LayerMask whatIsGround; // What to look for in that check ^^
 
+    public bool holdingSomething;
+    public Transform holdSpot;
+    public GameObject heldObject;
+    public bool throwable = true;
+
 
     // Start is called before the first frame update
     void Start()
@@ -52,6 +57,19 @@ public class PlayerMovement : MonoBehaviour
             rb.velocity = Vector2.up * jumpMagnitute;
             isGrounded = false;
         }
+
+        //Monitor if the object held can be thrown yet or not
+        if(!Input.GetButton("PickupThrow") && !throwable && holdingSomething)
+        {
+            throwable = true;
+        }
+
+        //Throw!!!
+        if(Input.GetButton("PickupThrow") && throwable && holdingSomething)
+        {
+            holdingSomething = false;
+
+        }
     }
 
     void Flip()
@@ -63,8 +81,17 @@ public class PlayerMovement : MonoBehaviour
         transform.localScale = Scaler;
     }
 
-    void OnCollisionStay()
+    void OnCollisionStay2D(Collision2D other)
     {
-
+        if(other.gameObject.tag == "Item" && Input.GetButton("PickupThrow") && !holdingSomething)
+        {
+            holdingSomething = true;
+            other.gameObject.transform.SetParent(holdSpot);
+            heldObject = other.gameObject;
+            heldObject.transform.position = holdSpot.position;
+            heldObject.GetComponent<Rigidbody2D>().simulated = false;
+            heldObject.GetComponent<BoxCollider2D>().enabled = false;
+            throwable = false;
+        }
     }
 }
