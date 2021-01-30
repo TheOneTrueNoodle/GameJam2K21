@@ -12,7 +12,7 @@ public class StealieScript2 : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        _isFollow = true;
     }
 
     // Update is called once per frame
@@ -28,7 +28,7 @@ public class StealieScript2 : MonoBehaviour
     {
         if(collision.gameObject.tag=="Item")
         {
-
+            StartCoroutine(Stunned());
         }
     }
 
