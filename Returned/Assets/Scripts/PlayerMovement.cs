@@ -23,6 +23,9 @@ public class PlayerMovement : MonoBehaviour
     public GameObject heldObject;
     public bool throwable = true;
 
+    public int yeetStrength;
+
+
 
     // Start is called before the first frame update
     void Start()
@@ -68,7 +71,25 @@ public class PlayerMovement : MonoBehaviour
         if(Input.GetButton("PickupThrow") && throwable && holdingSomething)
         {
             holdingSomething = false;
-
+            
+            //Calculate position to put object you were holding at
+            Vector3 camCoords = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            camCoords.z = 0;
+            Vector3 reletiveVector = camCoords.normalized + transform.position;
+            
+            //Prep to throw the object!
+            heldObject.transform.SetParent(null);
+            heldObject.transform.position = reletiveVector;
+            Rigidbody2D objRb = heldObject.GetComponent<Rigidbody2D>();
+            objRb.simulated = true;
+            heldObject.GetComponent<BoxCollider2D>().enabled = true;
+            
+            //Throw the object!
+            
+            
+            objRb.velocity = camCoords.normalized * yeetStrength;
+            Debug.Log(reletiveVector);
+            throwable = false;
         }
     }
 
@@ -89,6 +110,7 @@ public class PlayerMovement : MonoBehaviour
             other.gameObject.transform.SetParent(holdSpot);
             heldObject = other.gameObject;
             heldObject.transform.position = holdSpot.position;
+            heldObject.transform.rotation = holdSpot.rotation;
             heldObject.GetComponent<Rigidbody2D>().simulated = false;
             heldObject.GetComponent<BoxCollider2D>().enabled = false;
             throwable = false;
