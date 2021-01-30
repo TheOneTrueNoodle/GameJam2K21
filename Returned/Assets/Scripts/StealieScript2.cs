@@ -7,18 +7,29 @@ public class StealieScript2 : MonoBehaviour
     public Transform Player;
     public float Speed;
 
-    private bool _isFollow;
+    private bool _isFollow,_isHolding;
+    private PlayerMovement playerMovement;
 
     // Start is called before the first frame update
     void Start()
     {
         _isFollow = true;
         Player= GameObject.FindGameObjectWithTag("Player").transform;
+        playerMovement = FindObjectOfType<PlayerMovement>();
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
+        _isHolding = playerMovement.holdingSomething;
+        if(_isHolding)
+        {
+            _isFollow = false;
+        }
+        else
+        {
+            _isFollow = true;
+        }
 
         //checks if Stealie can follow player
         if(_isFollow)
