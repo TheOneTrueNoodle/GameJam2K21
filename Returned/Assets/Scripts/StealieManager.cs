@@ -8,7 +8,7 @@ public class StealieManager : MonoBehaviour
 
     public GameObject Stealie;
 
-    private int _previousItems;
+    public int _previousItems;
 
     // Start is called before the first frame update
     void Start()
