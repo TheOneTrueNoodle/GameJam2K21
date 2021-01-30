@@ -5,7 +5,7 @@ using UnityEngine;
 public class StealieScript2 : MonoBehaviour
 {
     public Transform Player, holdSpot;
-    public float Speed;
+    public float Speed,WaitTime;
     public Transform[] MovePositions;
 
     private bool _isFollow,_isPlayerHolding,_isStealieHolding, _isStunned;
@@ -93,7 +93,7 @@ public class StealieScript2 : MonoBehaviour
     IEnumerator Stunned()
     {
         _isStunned = true;
-        yield return new WaitForSeconds(3.0f);
+        yield return new WaitForSeconds(WaitTime);
         _isStunned = false;
 
     }
