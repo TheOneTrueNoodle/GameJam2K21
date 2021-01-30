@@ -17,4 +17,9 @@ public class StealieScript2 : MonoBehaviour
     {
         transform.position = Vector3.MoveTowards(transform.position, Player.position,Speed*Time.deltaTime);
     }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        
+    }
 }
