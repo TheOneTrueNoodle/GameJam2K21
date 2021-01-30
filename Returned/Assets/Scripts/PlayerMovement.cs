@@ -28,8 +28,6 @@ public class PlayerMovement : MonoBehaviour
 
     public int yeetStrength;
 
-    public GameObject test;
-
 
     // Start is called before the first frame update
     void Start()
@@ -95,7 +93,7 @@ public class PlayerMovement : MonoBehaviour
             Vector2 finalVector = reletiveVector.normalized + rb.position; // Correct direction combined with the right start point (us!)
             heldObject.transform.SetParent(null);
             heldObject.transform.position = finalVector;
-            test.transform.position = reletiveVector.normalized + rb.position;
+            //test.transform.position = reletiveVector.normalized + rb.position;
             Rigidbody2D objRb = heldObject.GetComponent<Rigidbody2D>();
             objRb.simulated = true;
             heldObject.GetComponent<BoxCollider2D>().enabled = true;
